@@ -1,12 +1,1 @@
-export function Footer() {
-  return (
-    <footer className="site-footer">
-      <div className="footer-brand">
-        <span className="brand-mark" aria-hidden="true">N</span>
-        <span>North</span>
-      </div>
-      <p>为清晰、快速、可靠的 Web 产品而生。</p>
-      <p>© {new Date().getFullYear()} North Studio</p>
-    </footer>
-  )
-}
+export function Footer() { return <footer><div className="brand footer-logo"><span>Q</span><b>Quality<br />to Code</b></div><p>从测试出发，向创造前进。</p><p>© {new Date().getFullYear()} TEST → DEV</p></footer> }

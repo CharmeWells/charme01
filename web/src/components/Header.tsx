@@ -1,45 +1,7 @@
 import { useState } from 'react'
-
-const links = [
-  { label: '文档结构', href: '#structure' },
-  { label: '核心标签', href: '#tags' },
-  { label: '学习路线', href: '#roadmap' },
-  { label: '检查清单', href: '#checklist' },
-]
-
-export function Header() {
+type Key = 'frontend' | 'backend' | 'ai'
+export function Header({ onHome, onSelect, active }: { onHome: () => void; onSelect: (key: Key) => void; active: Key | null }) {
   const [open, setOpen] = useState(false)
-
-  return (
-    <header className="site-header docs-header">
-      <a className="brand" href="#top" aria-label="North 首页">
-        <span className="brand-mark" aria-hidden="true">N</span>
-        <span>North Docs</span>
-      </a>
-
-      <button
-        className="menu-button"
-        type="button"
-        aria-expanded={open}
-        aria-controls="site-navigation"
-        onClick={() => setOpen((value) => !value)}
-      >
-        <span />
-        <span />
-        <span />
-        <span className="sr-only">切换导航</span>
-      </button>
-
-      <nav id="site-navigation" className={open ? 'site-nav is-open' : 'site-nav'}>
-        {links.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
-            {link.label}
-          </a>
-        ))}
-        <a className="button button-small" href="/login" onClick={() => setOpen(false)}>
-          登录
-        </a>
-      </nav>
-    </header>
-  )
+  const choose = (key: Key) => { onSelect(key); setOpen(false) }
+  return <header className="site-header"><button className="brand" onClick={onHome}><span>Q</span><b>Quality<br />to Code</b></button><button className="menu" onClick={() => setOpen(!open)} aria-label="切换导航">{open ? '×' : '☰'}</button><nav className={open ? 'open' : ''}><button className={!active ? 'active' : ''} onClick={onHome}>首页</button><button onClick={() => choose('frontend')}>前端</button><button onClick={() => choose('backend')}>后端</button><button onClick={() => choose('ai')}>AI 辅助</button><a href="#modules">开始学习 ↗</a></nav></header>
 }
