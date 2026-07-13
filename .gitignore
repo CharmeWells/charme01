@@ -1,0 +1,9 @@
+# Local database credentials and runtime data
+.env
+*.local
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.vscode/
+
