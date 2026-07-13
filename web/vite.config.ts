@@ -11,5 +11,8 @@ export default defineConfig({
   base: '/charme01/',
   server: {
     port: 5173,
+    proxy: {
+      '/api': 'http://localhost:8000',
+    },
   },
 })
