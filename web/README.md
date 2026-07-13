@@ -24,3 +24,8 @@ src/
 ├── App.tsx         # 页面结构
 └── main.tsx        # 应用入口
 ```
+<!--
+文件作用：项目的人类可读说明文档。
+文件交互：不参与构建；开发者通过这里了解 web 子项目的启动、构建与部署方式。
+交互方式：文档中的命令调用 package.json scripts，部署说明对应 .github/workflows/deploy-pages.yml。
+-->

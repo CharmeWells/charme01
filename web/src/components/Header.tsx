@@ -1,3 +1,8 @@
+/**
+ * 文件作用：全站顶部导航和移动端菜单。
+ * 文件交互：由 App.tsx 调用，并通过 onHome/onSelect 回调通知 App 切换页面状态。
+ * 交互方式：第 9 行维护菜单开关；第 10 行选择模块并关闭菜单；第 11 行渲染导航按钮。
+ */
 import { useState } from 'react'
 type Key = 'frontend' | 'backend' | 'ai'
 export function Header({ onHome, onSelect, active }: { onHome: () => void; onSelect: (key: Key) => void; active: Key | null }) {

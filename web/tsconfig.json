@@ -1,3 +1,6 @@
+// 文件作用：TypeScript 总入口，不直接编译代码。
+// 文件交互：第 6～8 行分别引用浏览器应用配置 tsconfig.app.json 和 Vite 配置 tsconfig.node.json。
+// 交互方式：编辑器与 tsc 通过 references 构建两个独立类型检查项目。
 {
   "files": [],
   "references": [

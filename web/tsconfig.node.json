@@ -1,3 +1,6 @@
+// 文件作用：约束运行在 Node.js 环境中的 vite.config.ts。
+// 文件交互：package.json 的 build 脚本单独执行本配置，避免混用浏览器类型环境。
+// 交互方式：compilerOptions 提供 Node/Vite 所需模块解析；include 只扫描 vite.config.ts。
 {
   "compilerOptions": {
     "skipLibCheck": true,

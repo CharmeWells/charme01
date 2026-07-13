@@ -1,3 +1,6 @@
+// 文件作用：约束 src 目录中的 React 浏览器代码。
+// 文件交互：package.json 的 build 脚本通过 tsc -p tsconfig.app.json 使用本文件。
+// 交互方式：compilerOptions 定义目标浏览器、JSX 和严格检查；include 指向 src。
 {
   "compilerOptions": {
     "target": "ES2020",
