@@ -43,6 +43,32 @@ const modules = {
   },
 } satisfies Record<ModuleKey, object>
 
+const lessonContent: Record<ModuleKey, Array<{
+  id: string
+  label: string
+  title: string
+  summary: string
+  topics: string[]
+  task: string
+  done: string
+}>> = {
+  frontend: [
+    { id: 'html-css', label: '01 / HTML & CSS', title: '搭建可访问的响应式页面', summary: '从语义化结构开始，理解盒模型、布局和响应式规则，把设计稿还原成不同设备都能使用的页面。', topics: ['语义化 HTML 与表单', 'Flexbox / Grid 布局', '响应式与可访问性', 'DevTools 定位样式问题'], task: '完成一个带登录、筛选和数据表格的管理页，并适配手机端。', done: '页面在 375px 与 1440px 下无横向溢出，表单可用键盘完整操作。' },
+    { id: 'javascript', label: '02 / JAVASCRIPT', title: '用状态和事件驱动交互', summary: '建立变量、函数、对象和异步编程基础，理解浏览器事件与数据请求的完整过程。', topics: ['现代 JavaScript 语法', 'DOM 与事件机制', 'Promise / async await', 'TypeScript 类型基础'], task: '为用例列表实现搜索、分页、编辑和异步加载状态。', done: '能够处理加载、成功、空数据和请求失败四种界面状态。' },
+    { id: 'react', label: '03 / REACT', title: '将业务拆成可复用组件', summary: '用组件和单向数据流组织复杂界面，掌握常见 Hook、路由和工程化构建方式。', topics: ['组件与 Props', 'State 与常用 Hooks', '路由与表单管理', 'Vite 构建与组件测试'], task: '把管理页重构为 React 应用，拆分导航、筛选器、表格和弹窗组件。', done: '组件职责清晰，关键交互有测试，并可生成生产构建。' },
+  ],
+  backend: [
+    { id: 'python', label: '01 / PYTHON', title: '用 Python 表达业务规则', summary: '从数据类型、函数与类出发，写出结构清楚、异常可控并且可测试的业务代码。', topics: ['数据类型与控制流', '函数、模块与类', '异常处理与日志', 'pytest 单元测试'], task: '实现缺陷优先级计算、状态流转和数据校验模块。', done: '非法状态流转会被拒绝，核心业务规则具有自动化测试。' },
+    { id: 'api-database', label: '02 / API & DATABASE', title: '设计接口与持久化数据', summary: '理解 HTTP 协议、REST 约束和关系型数据库，让前后端围绕稳定契约协作。', topics: ['HTTP 与 REST 设计', 'FastAPI 路由与校验', 'SQL 与数据建模', 'JWT 身份认证'], task: '实现缺陷的新增、查询、修改、删除、筛选与分页接口。', done: '接口状态码准确，OpenAPI 文档完整，数据库约束能够保护数据一致性。' },
+    { id: 'deployment', label: '03 / DELIVERY', title: '让服务稳定运行并可定位', summary: '补齐配置、日志、容器和持续集成，使服务从本地代码变成可交付的软件。', topics: ['配置与环境变量', '结构化日志与监控', 'Docker 容器化', 'CI/CD 基础流程'], task: '为缺陷 API 编写 Dockerfile，并配置自动测试与健康检查。', done: '新环境可一条命令启动，服务异常能通过日志快速定位。' },
+  ],
+  ai: [
+    { id: 'ai-workflow', label: '01 / AI WORKFLOW', title: '建立可靠的人机协作方式', summary: '把需求拆成可验证的小任务，为模型提供充分上下文，并用测试思维审查每一次输出。', topics: ['任务拆解与上下文', '结构化提示模板', '代码生成与审查', '隐私与安全边界'], task: '用 AI 完成一个功能，并记录需求、提示、验证和修正全过程。', done: '生成代码通过人工审查和自动化测试，且不包含敏感信息。' },
+    { id: 'rag-agent', label: '02 / RAG & AGENT', title: '把模型能力接入真实产品', summary: '学习模型 API、向量检索和工具调用，构建能够依据私有知识回答并执行操作的应用。', topics: ['模型 API 与流式输出', 'Embedding 与向量检索', 'RAG 引用与召回', '工具调用与智能体'], task: '构建一个能检索测试规范、回答问题并标注来源的助手。', done: '答案包含可追溯来源，知识库无答案时不会编造结论。' },
+    { id: 'ai-evaluation', label: '03 / EVALUATION', title: '用评测约束 AI 的不确定性', summary: '建立覆盖正确性、安全性、成本和延迟的评测体系，让 AI 功能可以持续迭代。', topics: ['黄金数据集设计', '正确性与幻觉评估', '提示注入与安全护栏', '成本、延迟与可观测性'], task: '建立不少于 30 条场景的评测集，并生成版本对比报告。', done: '每次提示或模型变更都能量化质量变化，并设置发布阈值。' },
+  ],
+}
+
 function Home({ onSelect }: { onSelect: (key: ModuleKey) => void }) {
   return <main>
     <section className="hero">
@@ -76,9 +102,11 @@ function Home({ onSelect }: { onSelect: (key: ModuleKey) => void }) {
 
 function ModulePage({ moduleKey, onHome }: { moduleKey: ModuleKey; onHome: () => void }) {
   const item = modules[moduleKey]
+  const lessons = lessonContent[moduleKey]
   return <main className="detail" style={{'--accent': item.color} as React.CSSProperties}>
-    <section className="detail-hero"><button onClick={onHome}>← 返回学习地图</button><p>{item.number} / {item.label}</p><h1>{item.title}</h1><h2>{item.subtitle}</h2><p className="detail-intro">{item.intro}</p><div className="skill-row">{item.skills.map(s => <span key={s}>{s}</span>)}</div></section>
-    <section className="detail-body"><div className="detail-heading"><p>ROADMAP</p><h2>三阶段<br />学习路线</h2></div><ol className="stage-list">{item.stages.map(([phase,title,desc]) => <li key={phase}><span>{phase}</span><h3>{title}</h3><p>{desc}</p></li>)}</ol></section>
+    <section className="detail-hero"><button onClick={onHome}>← 返回学习地图</button><p>{item.number} / {item.label}</p><h1>{item.title}</h1><h2>{item.subtitle}</h2><p className="detail-intro">{item.intro}</p><nav className="skill-row" aria-label="本模块内容导航">{lessons.map(lesson => <a key={lesson.id} href={`#${moduleKey}-${lesson.id}`}>{lesson.label} ↘</a>)}</nav></section>
+    <section className="detail-body"><div className="detail-heading"><p>ROADMAP</p><h2>三阶段<br />学习路线</h2><small>点击阶段可直接进入具体学习内容</small></div><ol className="stage-list">{item.stages.map(([phase,title,desc], index) => <li key={phase}><span>{phase}</span><h3>{title}</h3><p>{desc}</p><a href={`#${moduleKey}-${lessons[index].id}`} aria-label={`进入${title}`}>查看内容 ↘</a></li>)}</ol></section>
+    <section className="lesson-section"><header><p>CURRICULUM / 具体内容</p><h2>从知识点<br />到可交付成果</h2></header><div className="lesson-list">{lessons.map((lesson, index) => <article id={`${moduleKey}-${lesson.id}`} key={lesson.id}><div className="lesson-index">0{index + 1}</div><div className="lesson-copy"><p>{lesson.label}</p><h3>{lesson.title}</h3><p>{lesson.summary}</p><div className="topic-grid">{lesson.topics.map(topic => <span key={topic}>→ {topic}</span>)}</div><dl><div><dt>动手任务</dt><dd>{lesson.task}</dd></div><div><dt>完成标准</dt><dd>{lesson.done}</dd></div></dl></div><a className="back-top" href="#top">回到顶部 ↑</a></article>)}</div></section>
     <section className="project"><div><p>CAPSTONE PROJECT / 毕业项目</p><h2>{item.project}</h2><p>{item.projectDesc}</p></div><div className="project-mark">{item.number}<small>BUILD<br />TO LEARN</small></div></section>
     <section className="outcomes"><p>完成这个模块后，你将能够</p><div>{item.outcomes.map((o, i) => <span key={o}><b>0{i+1}</b>{o}</span>)}</div><button className="primary" onClick={onHome}>返回并选择下一模块 ↗</button></section>
   </main>
@@ -87,7 +115,7 @@ function ModulePage({ moduleKey, onHome }: { moduleKey: ModuleKey; onHome: () =>
 function App() {
   const [active, setActive] = useState<ModuleKey | null>(null)
   useEffect(() => { window.scrollTo(0, 0) }, [active])
-  return <div className="app-shell"><Header onHome={() => setActive(null)} onSelect={setActive} active={active} />{active ? <ModulePage moduleKey={active} onHome={() => setActive(null)} /> : <Home onSelect={setActive} />}<Footer /></div>
+  return <div id="top" className="app-shell"><Header onHome={() => setActive(null)} onSelect={setActive} active={active} />{active ? <ModulePage moduleKey={active} onHome={() => setActive(null)} /> : <Home onSelect={setActive} />}<Footer /></div>
 }
 
 export default App
