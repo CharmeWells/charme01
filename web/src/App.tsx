@@ -9,6 +9,8 @@
 import { useEffect, useState } from 'react'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
+import { LoginPage } from './pages/LoginPage'
+import { authApi, User } from './services/auth'
 
 type ModuleKey = 'frontend' | 'backend' | 'ai'
 
@@ -285,12 +287,17 @@ function FocusPage({ moduleKey, lessonIndex, topicIndex, focusIndex, onBack, onT
 
 function App() {
   const [active, setActive] = useState<ModuleKey | null>(null)
+  const [loginActive, setLoginActive] = useState(false)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [activeTopic, setActiveTopic] = useState<{ lessonIndex: number; topicIndex: number } | null>(null)
   const [activeFocus, setActiveFocus] = useState<number | null>(null)
-  const goHome = () => { setActive(null); setActiveTopic(null); setActiveFocus(null) }
-  const selectModule = (key: ModuleKey) => { setActive(key); setActiveTopic(null); setActiveFocus(null) }
-  useEffect(() => { window.scrollTo(0, 0) }, [active, activeTopic, activeFocus])
-  return <div id="top" className="app-shell"><Header onHome={goHome} onSelect={selectModule} active={active} />{active && activeTopic && activeFocus !== null ? <FocusPage moduleKey={active} {...activeTopic} focusIndex={activeFocus} onBack={() => setActiveFocus(null)} onTopic={() => setActiveFocus(null)} /> : active && activeTopic ? <TopicPage moduleKey={active} {...activeTopic} onBack={() => setActiveTopic(null)} onHome={goHome} onFocus={setActiveFocus} /> : active ? <ModulePage moduleKey={active} onHome={goHome} onTopic={(lessonIndex, topicIndex) => { setActiveTopic({ lessonIndex, topicIndex }); setActiveFocus(null) }} /> : <Home onSelect={selectModule} />}<Footer /></div>
+  const goHome = () => { setActive(null); setActiveTopic(null); setActiveFocus(null); setLoginActive(false) }
+  const selectModule = (key: ModuleKey) => { setActive(key); setActiveTopic(null); setActiveFocus(null); setLoginActive(false) }
+  const goLogin = () => { setActive(null); setActiveTopic(null); setActiveFocus(null); setLoginActive(true) }
+  const logout = async () => { await authApi.logout().catch(() => undefined); setCurrentUser(null); goHome() }
+  useEffect(() => { authApi.me().then(setCurrentUser).catch(() => setCurrentUser(null)) }, [])
+  useEffect(() => { window.scrollTo(0, 0) }, [active, activeTopic, activeFocus, loginActive])
+  return <div id="top" className="app-shell"><Header onHome={goHome} onSelect={selectModule} onLogin={goLogin} onLogout={logout} active={active} loginActive={loginActive} username={currentUser?.username ?? null} />{loginActive ? <LoginPage onBack={goHome} onAuthenticated={setCurrentUser} /> : active && activeTopic && activeFocus !== null ? <FocusPage moduleKey={active} {...activeTopic} focusIndex={activeFocus} onBack={() => setActiveFocus(null)} onTopic={() => setActiveFocus(null)} /> : active && activeTopic ? <TopicPage moduleKey={active} {...activeTopic} onBack={() => setActiveTopic(null)} onHome={goHome} onFocus={setActiveFocus} /> : active ? <ModulePage moduleKey={active} onHome={goHome} onTopic={(lessonIndex, topicIndex) => { setActiveTopic({ lessonIndex, topicIndex }); setActiveFocus(null) }} /> : <Home onSelect={selectModule} />}<Footer /></div>
 }
 
 export default App

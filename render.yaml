@@ -1,0 +1,34 @@
+# Render Blueprint: creates the FastAPI service and managed PostgreSQL together.
+services:
+  - type: web
+    name: quality-to-code-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quality-to-code-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_HOURS
+        value: "24"
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: none
+      - key: CORS_ORIGINS
+        value: https://charmewells.github.io
+
+databases:
+  - name: quality-to-code-db
+    plan: free
+    region: singapore
+    postgresMajorVersion: "18"
+    databaseName: quality_to_code
+    user: app_user

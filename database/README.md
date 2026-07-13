@@ -17,6 +17,8 @@ docker compose ps
 
 浏览器管理界面：<http://localhost:8080>
 
+认证 API：<http://localhost:8000/docs>
+
 Adminer 登录时，服务器填写 `postgres`，不要填写 `localhost`。
 
 ## 常用命令
@@ -35,5 +37,14 @@ docker compose down
 docker compose down -v
 docker compose up -d
 ```
+
+## 认证接口
+
+- `POST /api/auth/register`：注册用户并创建登录会话
+- `POST /api/auth/login`：验证用户名和密码并创建登录会话
+- `GET /api/auth/me`：读取当前登录用户
+- `POST /api/auth/logout`：清除登录会话
+
+密码使用 Argon2 哈希后写入 `users.password_hash`，浏览器只保存带有 `HttpOnly` 属性的签名会话 Cookie。生产环境必须使用随机 `JWT_SECRET`、HTTPS，并设置 `COOKIE_SECURE=true`。
 
 `.env` 包含本地密码，已被 Git 忽略；只有 `.env.example` 可以提交。

@@ -39,6 +39,8 @@ jobs:
 
       - name: Build website
         working-directory: web
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: npm run build
 
       - name: Configure GitHub Pages
