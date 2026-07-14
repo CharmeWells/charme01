@@ -15,6 +15,8 @@ export function LoginPage({ onBack, onAuthenticated }: { onBack: () => void; onA
   const [errors, setErrors] = useState<Errors>({})
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const update = (field: Fields, value: string) => {
     setValues(current => ({ ...current, [field]: value }))
@@ -58,9 +60,9 @@ export function LoginPage({ onBack, onAuthenticated }: { onBack: () => void; onA
         <input id="username" name="username" autoComplete="username" value={values.username} onChange={event => update('username', event.target.value)} aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? 'username-error' : undefined} />
         {errors.username && <small id="username-error" className="field-error">{errors.username}</small>}
         <label htmlFor="password">密码 <span>*</span></label>
-        <input id="password" name="password" type="password" autoComplete="new-password" value={values.password} onChange={event => update('password', event.target.value)} aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? 'password-error' : undefined} />
+        <div className="password-field"><input id="password" name="password" type={showPassword ? 'text' : 'password'} autoComplete={mode === 'register' ? 'new-password' : 'current-password'} value={values.password} onChange={event => update('password', event.target.value)} aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? 'password-error' : undefined} /><button type="button" onClick={() => setShowPassword(current => !current)} aria-label={showPassword ? '隐藏密码' : '显示密码'} aria-pressed={showPassword}>{showPassword ? '隐藏' : '显示'}</button></div>
         {errors.password && <small id="password-error" className="field-error">{errors.password}</small>}
-        {mode === 'register' && <><label htmlFor="confirm-password">确认密码 <span>*</span></label><input id="confirm-password" name="confirmPassword" type="password" autoComplete="new-password" value={values.confirmPassword} onChange={event => update('confirmPassword', event.target.value)} aria-invalid={Boolean(errors.confirmPassword)} aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined} />{errors.confirmPassword && <small id="confirm-password-error" className="field-error">{errors.confirmPassword}</small>}</>}
+        {mode === 'register' && <><label htmlFor="confirm-password">确认密码 <span>*</span></label><div className="password-field"><input id="confirm-password" name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" value={values.confirmPassword} onChange={event => update('confirmPassword', event.target.value)} aria-invalid={Boolean(errors.confirmPassword)} aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined} /><button type="button" onClick={() => setShowConfirmPassword(current => !current)} aria-label={showConfirmPassword ? '隐藏确认密码' : '显示确认密码'} aria-pressed={showConfirmPassword}>{showConfirmPassword ? '隐藏' : '显示'}</button></div>{errors.confirmPassword && <small id="confirm-password-error" className="field-error">{errors.confirmPassword}</small>}</>}
         <button className="primary" type="submit" disabled={submitting}>{submitting ? '正在提交…' : mode === 'register' ? '创建账号 →' : '登录 →'}</button>
         {message && <p className="form-message error" role="alert">{message}</p>}
       </form>
